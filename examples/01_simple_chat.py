@@ -2,7 +2,7 @@
 import sys
 sys.path.insert(0, '..')
 
-from src.agent import SimpleOllamaChat
+from src.agent import ToolCallingOllamaChat
 
 
 def main():
@@ -10,9 +10,9 @@ def main():
     print("Simple Chat with Ollama")
     print("=" * 50)
     print("\nMake sure Ollama is running:")
-    print("  ollama run qwen2.5-coder\n")
+    print("  ollama run qwen2.5-coder:7b\n")
     
-    chat = SimpleOllamaChat()
+    chat = ToolCallingOllamaChat()
     
     print("Type 'quit' to exit\n")
     
@@ -27,7 +27,7 @@ def main():
             continue
         
         print("\nOllama is thinking...\n")
-        response = chat.chat(user_input)
+        response = chat.chat_with_tools(user_input)
         print(f"Assistant: {response}\n")
 
 

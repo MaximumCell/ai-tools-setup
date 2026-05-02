@@ -1,15 +1,7 @@
-"""Custom tools for the AI agent powered by CrewAI."""
-from crewai_tools import (
-    FileReadTool,
-    FileWriteTool,
-    DirectoryReadTool,
-    FileDeleteTool,
-    CodeDocsSearchTool,
-)
+"""Custom tools for the local Ollama assistant."""
 from datetime import datetime
 import platform
 import subprocess
-from typing import Optional
 import json
 
 
@@ -110,23 +102,32 @@ class CustomTools:
         except Exception as e:
             return f"Error searching files: {str(e)}"
 
-
-def get_crewai_tools():
-    """
-    Get all available CrewAI tools for the agent.
-    
-    Returns:
-        Dictionary of tool instances
-    """
-    tools = {
-        # File operations
-        "file_read": FileReadTool(),
-        "file_write": FileWriteTool(),
-        "file_delete": FileDeleteTool(),
-        "directory_read": DirectoryReadTool(),
-        "code_docs_search": CodeDocsSearchTool(),
-    }
-    return tools
+    @staticmethod
+    def count_files(pattern: str, directory: str = ".") -> str:
+        """
+        Count files matching a pattern.
+        
+        Args:
+            pattern: File pattern to search for (e.g., "*.py")
+            directory: Search directory (default: current directory)
+            
+        Returns:
+            Count of matching files and a short list of matches
+        """
+        try:
+            import glob
+            matches = glob.glob(f"{directory}/**/{pattern}", recursive=True)
+            count = len(matches)
+            if count == 0:
+                return f"Found 0 files matching '{pattern}' in '{directory}'"
+            sample = "\n".join(matches[:20])
+            more = "" if count <= 20 else f"\n...and {count - 20} more"
+            return (
+                f"Found {count} files matching '{pattern}' in '{directory}':\n"
+                f"{sample}{more}"
+            )
+        except Exception as e:
+            return f"Error counting files: {str(e)}"
 
 
 def get_custom_tools():
@@ -142,4 +143,5 @@ def get_custom_tools():
         "execute_command": CustomTools.execute_command,
         "list_files": CustomTools.list_files,
         "search_files": CustomTools.search_files,
+        "count_files": CustomTools.count_files,
     }

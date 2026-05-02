@@ -35,7 +35,8 @@ env/
 
 # Environment
 .env
-.env.local
+.env.*
+
 
 # Cache
 .pytest_cache/
